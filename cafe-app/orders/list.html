@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 내역 - 카페 앱</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="list.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <button class="btn-back" onclick="history.back()">←</button>
+            <h1>주문 내역</h1>
+            <div class="spacer"></div>
+        </header>
+
+        <main class="main-content">
+            <div id="order-list" class="order-list">
+                </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="../index.html">홈</a>
+            <a href="../menus/list.html">메뉴</a>
+            <a href="list.html" class="active">주문내역</a>
+            <a href="../my/index.html">마이</a>
+        </nav>
+    </div>
+
+    <script type="module" src="list.js"></script>
+</body>
+</html>

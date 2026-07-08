@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카페 앱 - 마이페이지</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="page-header">
+        <button class="btn-icon" onclick="location.href='../index.html'">◀ 홈으로</button>
+        <h1>👤 마이페이지</h1>
+        <div style="width: 60px;"></div> </header>
+
+    <main class="my-container">
+        <section class="glass-card profile-section">
+            <div class="profile-info">
+                <div class="avatar">☕</div>
+                <div class="user-meta">
+                    <h2 id="user-nickname">고객님</h2>
+                    <span id="user-grade" class="badge-grade">멤버십 등급</span>
+                </div>
+            </div>
+            
+            <form id="profile-form" class="profile-edit-form">
+                <input type="text" id="nickname-input" placeholder="변경할 닉네임 입력" required>
+                <button type="submit" class="btn-sm-primary">수정</button>
+            </form>
+        </section>
+
+        <section class="glass-card stamp-section">
+            <h3>🎯 나의 스탬프 카드</h3>
+            <p class="stamp-count"><span id="stamp-active">0</span> / 10</p>
+            <div id="stamp-grid" class="stamp-grid">
+                </div>
+            <p class="stamp-notice">✨ 10개를 모으시면 아메리카노 1잔 무료 쿠폰이 발행됩니다.</p>
+        </section>
+
+        <section class="glass-card summary-section">
+            <div class="summary-item" onclick="location.href='../orders/list.html'">
+                <span class="summary-title">📜 총 주문 내역</span>
+                <span id="total-orders-count" class="summary-value">0건</span>
+            </div>
+            <div class="summary-item" onclick="location.href='../basket/list.html'">
+                <span class="summary-title">🛒 장바구니 가기</span>
+                <span class="summary-value">▶</span>
+            </div>
+        </section>
+    </main>
+
+    <script src="index.js"></script>
+</body>
+</html>

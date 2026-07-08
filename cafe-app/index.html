@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☕ Cafe Warmth</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo" onclick="location.reload()">☕ Cafe Warmth</div>
+        <nav class="nav-links">
+            <button onclick="location.href='admin/menus/list.html'" class="btn-nav admin-link">⚙️ 관리자 모드</button>
+            <button onclick="location.href='basket/list.html'" class="btn-nav">🛒 장바구니</button>
+            <button onclick="location.href='my/index.html'" class="btn-nav">👤 마이페이지</button>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>오늘도 따뜻한<br>커피 한 잔 어떠세요?</h1>
+            <p>엄선된 원두로 내린 깊은 풍미의 음료를 만나보세요.</p>
+        </div>
+    </section>
+
+    <section class="category-section">
+        <div class="category-tabs">
+            <button class="tab-btn active" data-category="all">전체 메뉴</button>
+            <button class="tab-btn" data-category="coffee">☕ 커피</button>
+            <button class="tab-btn" data-category="beverage">🍹 음료</button>
+            <button class="tab-btn" data-category="dessert">🍰 디저트</button>
+        </div>
+    </section>
+
+    <main class="menu-container">
+        <div id="main-menu-grid" class="menu-grid">
+            </div>
+    </main>
+
+    <script src="index.js"></script>
+</body>
+</html>

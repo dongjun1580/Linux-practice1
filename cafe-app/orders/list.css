@@ -1,0 +1,140 @@
+body {
+    background-color: var(--bg-color, #fdfbf7);
+    color: var(--text-color, #3e2723);
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0,05);
+    position: relative;
+    padding-bottom: 60px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(62, 39, 35, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #3e2723;
+    cursor: pointer;
+}
+
+.header h1 {
+    flex: 1;
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+    font-weight: 600;
+}
+
+.spacer { width: 20px; }
+
+.main-content {
+    padding: 16px;
+}
+
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Glassmorphism 주문 카드 스타일 */
+.order-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 30px rgba(62, 39, 35, 0.05);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.order-card:active {
+    transform: scale(0.98);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed rgba(62, 39, 35, 0.1);
+    padding-bottom: 8px;
+}
+
+.order-date {
+    font-size: 14px;
+    color: #8d6e63;
+}
+
+.order-status {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+/* 상태별 색상 (예시) */
+.status-ready { background: #e8f5e9; color: #2e7d32; }
+.status-preparing { background: #fff3e0; color: #ef6c00; }
+.status-complete { background: #efebe9; color: #4e342e; }
+
+.order-summary {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.order-price {
+    font-size: 15px;
+    color: #5d4037;
+    font-weight: 600;
+}
+
+/* 하단 네비게이션 */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #fff;
+    display: flex;
+    border-top: 1px solid #eee;
+}
+
+.bottom-nav a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #a1887f;
+    font-size: 12px;
+    flex-direction: column;
+}
+
+.bottom-nav a.active {
+    color: #5d4037;
+    font-weight: bold;
+}

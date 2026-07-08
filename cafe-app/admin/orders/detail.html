@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 상세 관리</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+    <!-- Phosphor Icons for modern sleek icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">CafeAdmin</div>
+            <nav>
+                <a href="list.html" class="nav-item back-btn">
+                    <i class="ph ph-arrow-left"></i>
+                    주문 목록으로
+                </a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <span class="badge">주문 상세</span>
+                    <h1>Order #<span id="order-id"></span></h1>
+                </div>
+                <div class="actions">
+                    <button id="btn-print" class="btn btn-outline"><i class="ph ph-printer"></i> 영수증 출력</button>
+                    <button id="btn-ready" class="btn btn-primary"><i class="ph ph-check-circle"></i> 준비 완료</button>
+                </div>
+            </header>
+
+            <div class="content-grid">
+                <!-- Customer Info Card -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <i class="ph ph-user-circle"></i>
+                        <h2>고객 정보</h2>
+                    </div>
+                    <div class="card-body info-list">
+                        <div class="info-item">
+                            <span class="label">고객명</span>
+                            <span class="value" id="customer-name"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">연락처</span>
+                            <span class="value">010-1234-5678</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">주문 일시</span>
+                            <span class="value" id="order-date"></span>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items Card -->
+                <div class="card items-card fade-in delay-1">
+                    <div class="card-header">
+                        <i class="ph ph-coffee"></i>
+                        <h2>주문 내역</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul id="order-items" class="order-items-list">
+                            <!-- Items inserted by JS -->
+                        </ul>
+                        <div class="order-summary">
+                            <div class="summary-row total">
+                                <span>총 결제 금액</span>
+                                <span id="total-amount"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="detail.js"></script>
+</body>
+</html>

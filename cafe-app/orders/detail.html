@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 상세 - 카페 앱</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <button class="btn-back" onclick="history.back()">←</button>
+            <h1>주문 상세</h1>
+            <div class="spacer"></div>
+        </header>
+
+        <main class="main-content">
+            <section class="status-section card">
+                <div class="order-id-label">주문번호: <span id="order-id">-</span></div>
+                <h2 id="order-status-text">메뉴를 만들고 있어요</h2>
+                <p class="status-desc">완료되면 진동벨 대신 알림을 보내드릴게요.</p>
+            </section>
+
+            <section class="items-section card">
+                <h3>주문 메뉴</h3>
+                <div id="order-items-list">
+                    </div>
+            </section>
+
+            <section class="payment-section card">
+                <h3>결제 금액</h3>
+                <div class="price-row">
+                    <span>주문 금액</span>
+                    <span id="sub-price">0원</span>
+                </div>
+                <div class="price-row total">
+                    <span>총 결제금액</span>
+                    <span id="total-price">0원</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="detail.js"></script>
+</body>
+</html>
