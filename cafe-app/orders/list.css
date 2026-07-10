@@ -1,140 +1,31 @@
-body {
-    background-color: var(--bg-color, #fdfbf7);
-    color: var(--text-color, #3e2723);
-    font-family: 'Pretendard', sans-serif;
-    margin: 0;
-    padding: 0;
+.main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 5%; background: var(--glass-bg);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100;
 }
+.logo { font-size: 1.4rem; font-weight: bold; color: var(--text-main); }
+.btn-nav { font-weight: bold; padding: 8px 14px; color: var(--primary-color); border-radius: 8px; transition: 0.2s; }
+.btn-nav:hover { background: rgba(141, 110, 99, 0.1); }
 
-.app-container {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: #fff;
-    box-shadow: 0 0 20px rgba(0,0,0,0,05);
-    position: relative;
-    padding-bottom: 60px;
+.orders-main { padding: 3rem 5%; display: flex; justify-content: center; }
+.orders-card {
+    background: var(--glass-bg); backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border); border-radius: 18px;
+    padding: 30px; width: 100%; max-width: 600px;
+    box-shadow: 0 8px 32px rgba(141, 110, 99, 0.08);
 }
+.orders-card h2 { margin-top: 0; color: var(--text-main); border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; margin-bottom: 20px;}
 
-.header {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(62, 39, 35, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+.order-list { display: flex; flex-direction: column; gap: 15px; }
+.order-item {
+    background: white; border-radius: 12px; padding: 20px;
+    border: 1px solid #eee; cursor: pointer; transition: 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
-
-.btn-back {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #3e2723;
-    cursor: pointer;
-}
-
-.header h1 {
-    flex: 1;
-    font-size: 18px;
-    text-align: center;
-    margin: 0;
-    font-weight: 600;
-}
-
-.spacer { width: 20px; }
-
-.main-content {
-    padding: 16px;
-}
-
-.order-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-/* Glassmorphism 주문 카드 스타일 */
-.order-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 4px 30px rgba(62, 39, 35, 0.05);
-    transition: transform 0.2s;
-    cursor: pointer;
-}
-
-.order-card:active {
-    transform: scale(0.98);
-}
-
-.order-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    border-bottom: 1px dashed rgba(62, 39, 35, 0.1);
-    padding-bottom: 8px;
-}
-
-.order-date {
-    font-size: 14px;
-    color: #8d6e63;
-}
-
-.order-status {
-    font-size: 13px;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 20px;
-}
-
-/* 상태별 색상 (예시) */
-.status-ready { background: #e8f5e9; color: #2e7d32; }
-.status-preparing { background: #fff3e0; color: #ef6c00; }
-.status-complete { background: #efebe9; color: #4e342e; }
-
-.order-summary {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 6px;
-}
-
-.order-price {
-    font-size: 15px;
-    color: #5d4037;
-    font-weight: 600;
-}
-
-/* 하단 네비게이션 */
-.bottom-nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: #fff;
-    display: flex;
-    border-top: 1px solid #eee;
-}
-
-.bottom-nav a {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: #a1887f;
-    font-size: 12px;
-    flex-direction: column;
-}
-
-.bottom-nav a.active {
-    color: #5d4037;
-    font-weight: bold;
-}
+.order-item:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-color: var(--primary-color); }
+.order-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; color: #888; }
+.order-status { font-weight: bold; color: #E65100; background: #FFF3E0; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem;}
+.order-title { font-size: 1.15rem; font-weight: bold; color: var(--text-main); margin-bottom: 10px; }
+.order-price { font-weight: bold; color: var(--primary-color); font-size: 1.1rem; }
+.empty-msg { text-align: center; padding: 40px 0; color: var(--text-muted); }

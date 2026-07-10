@@ -1,19 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메뉴 상세</title>
+    <title>메뉴 상세 - Cafe Warmth</title>
+    <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="detail.css">
 </head>
 <body>
-    <h1>메뉴 상세</h1>
-    <div id="menu-detail">
-        <p>메뉴 이름: <span id="menu-name"></span></p>
-        <p>가격: <span id="menu-price"></span></p>
-        <p>설명: <span id="menu-description"></span></p>
-    </div>
+    <header class="main-header">
+        <div class="logo">🔍 메뉴 상세</div>
+        <nav class="nav-links">
+            <a href="list.html" class="btn-nav">목록으로</a>
+        </nav>
+    </header>
+    <main class="detail-main">
+        <div class="detail-card">
+            <h2 id="menu-name"></h2>
+            <p id="menu-desc" class="menu-desc"></p>
+            <div class="price-box">
+                <span>가격:</span>
+                <strong id="menu-price"></strong>
+            </div>
+            <button id="btn-add-cart" class="btn-add-cart">🛒 장바구니 담기</button>
+        </div>
+    </main>
     <script src="detail.js"></script>
 </body>
 </html>
-

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니 - Cafe Warmth</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="list.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">🛒 내 장바구니</div>
+        <nav class="nav-links">
+            <a href="../index.html" class="btn-nav">🏠 홈으로 가기</a>
+        </nav>
+    </header>
+    <main class="basket-main">
+        <div class="basket-card">
+            <h2>주문하실 상품</h2>
+            <ul id="basket-items" class="basket-list">
+                <!-- JS 동적 렌더링 -->
+            </ul>
+            <div class="basket-summary">
+                <span>총 결제 금액</span>
+                <strong id="total-price">₩0</strong>
+            </div>
+            <button id="btn-checkout" class="btn-checkout">결제 및 주문하기</button>
+        </div>
+    </main>
+    <script src="list.js"></script>
+</body>
+</html>

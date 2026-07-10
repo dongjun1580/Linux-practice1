@@ -1,22 +1,38 @@
-// 대시보드 스크립트
-<!DOCTYPE html>
 document.addEventListener('DOMContentLoaded', () => {
-    const dashboard = document.getElementById('dashboard');
-    dashboard.innerHTML = '<p>대시보드 데이터가 여기에 로드됩니다.</p>';
-});
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대시보드</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-    <h1>관리자 대시보드</h1>
-    <div id="dashboard">
-        <p>여기에 대시보드 내용이 표시됩니다.</p>
-    </div>
-    <script src="index.js"></script>
-</body>
-</html>
+    const orders = JSON.parse(localStorage.getItem('cafe_orders')) || [];
+    const menus = JSON.parse(localStorage.getItem('cafe_menus')) || [];
 
+    const totalOrders = orders.length;
+    let totalRevenue = 0;
+    
+    orders.forEach(order => {
+        totalRevenue += order.totalPrice || 0;
+    });
+
+    const pendingOrders = orders.filter(o => o.status === '준비 중' || !o.status).length;
+
+    const main = document.querySelector('main');
+    if (main) {
+        const dashboardHTML = `
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>누적 주문 수</h3>
+                    <strong>${totalOrders}건</strong>
+                </div>
+                <div class="stat-card">
+                    <h3>누적 매출액</h3>
+                    <strong>₩${totalRevenue.toLocaleString()}</strong>
+                </div>
+                <div class="stat-card">
+                    <h3>등록된 메뉴</h3>
+                    <strong>${menus.length}개</strong>
+                </div>
+                <div class="stat-card">
+                    <h3>대기 중인 주문</h3>
+                    <strong style="color:#E65100;">${pendingOrders}건</strong>
+                </div>
+            </div>
+        `;
+        main.insertAdjacentHTML('beforeend', dashboardHTML);
+    }
+});

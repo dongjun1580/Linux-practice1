@@ -1,0 +1,38 @@
+/* css/variables.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+:root {
+    /* Primary Colors (따뜻한 브라운 톤) */
+    --primary-color: #8D6E63;
+    --primary-hover: #6D4C41;
+    
+    /* Backgrounds (크림 톤 배경) */
+    --bg-main: #FDFBF7;
+    --bg-secondary: #F5F2EC;
+    
+    /* Texts (부드러운 다크 브라운 텍스트) */
+    --text-main: #3E2723;
+    --text-muted: #795548;
+    
+    /* Glassmorphism Settings (투명도 있는 카드 효과) */
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.8);
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

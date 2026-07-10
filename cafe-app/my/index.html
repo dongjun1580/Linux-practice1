@@ -3,52 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>카페 앱 - 마이페이지</title>
+    <title>마이페이지 - Cafe Warmth</title>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <header class="page-header">
-        <button class="btn-icon" onclick="location.href='../index.html'">◀ 홈으로</button>
-        <h1>👤 마이페이지</h1>
-        <div style="width: 60px;"></div> </header>
+    <header class="main-header">
+        <div class="logo">👤 마이페이지</div>
+        <nav class="nav-links">
+            <a href="../index.html" class="btn-nav">🏠 홈으로 가기</a>
+        </nav>
+    </header>
+    <main class="my-main">
+        <div class="profile-card">
+            <div class="avatar">😄</div>
+            <h2>단골 고객님</h2>
+            <p>Cafe Warmth와 함께한 지 <strong>365일</strong>째</p>
+        </div>
+        
+        <div class="menu-grid">
+            <a href="../orders/list.html" class="my-menu-card">
+                <h3>📦 전체 주문 내역 가기</h3>
+                <p>지금까지 카페에 주문하신 모든 내역을 확인하세요.</p>
+            </a>
+            <a href="../basket/list.html" class="my-menu-card">
+                <h3>🛒 내 장바구니 가기</h3>
+                <p>미리 담아두신 맛있는 메뉴들을 확인하고 결제하세요.</p>
+            </a>
+        </div>
 
-    <main class="my-container">
-        <section class="glass-card profile-section">
-            <div class="profile-info">
-                <div class="avatar">☕</div>
-                <div class="user-meta">
-                    <h2 id="user-nickname">고객님</h2>
-                    <span id="user-grade" class="badge-grade">멤버십 등급</span>
-                </div>
+        <!-- 마이페이지 내 주문 미리보기 영역 추가 -->
+        <div class="recent-orders" style="margin-top: 40px;">
+            <h3 style="color: var(--text-main); margin-bottom: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px;">최근 주문 내역 미리보기</h3>
+            <div id="recent-orders-list">
+                <!-- JS 동적 렌더링 -->
             </div>
-            
-            <form id="profile-form" class="profile-edit-form">
-                <input type="text" id="nickname-input" placeholder="변경할 닉네임 입력" required>
-                <button type="submit" class="btn-sm-primary">수정</button>
-            </form>
-        </section>
-
-        <section class="glass-card stamp-section">
-            <h3>🎯 나의 스탬프 카드</h3>
-            <p class="stamp-count"><span id="stamp-active">0</span> / 10</p>
-            <div id="stamp-grid" class="stamp-grid">
-                </div>
-            <p class="stamp-notice">✨ 10개를 모으시면 아메리카노 1잔 무료 쿠폰이 발행됩니다.</p>
-        </section>
-
-        <section class="glass-card summary-section">
-            <div class="summary-item" onclick="location.href='../orders/list.html'">
-                <span class="summary-title">📜 총 주문 내역</span>
-                <span id="total-orders-count" class="summary-value">0건</span>
-            </div>
-            <div class="summary-item" onclick="location.href='../basket/list.html'">
-                <span class="summary-title">🛒 장바구니 가기</span>
-                <span class="summary-value">▶</span>
-            </div>
-        </section>
+        </div>
     </main>
-
     <script src="index.js"></script>
 </body>
 </html>
