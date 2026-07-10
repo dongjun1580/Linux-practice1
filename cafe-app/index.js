@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'm9', category: 'dessert', name: '티라미수', price: 6500, description: '부드러운 레이디핑거와 진한 마스카포네 치즈의 앙상블.', img: './티라미수.jpg' },
         { id: 'm10', category: 'dessert', name: '뉴욕 치즈 케이크', price: 6000, description: '꾸덕하고 진한 크림치즈의 풍미가 가득한 치즈 케이크.', img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=400&q=80' },
         { id: 'm11', category: 'dessert', name: '크로플', price: 5000, description: '겉은 바삭하고 속은 쫄깃한 와플에 메이플 시럽을 곁들였습니다.', img: './크로플.jpg' },
-        { id: 'm12', category: 'dessert', name: '마카롱 세트', price: 7500, description: '쫀득한 꼬끄와 달콤한 필링, 베스트 맛 3가지 마카롱 세트.', img: 'https://loremflickr.com/400/300/macaron' }
+        { id: 'm12', category: 'dessert', name: '마카롱 세트', price: 7500, description: '쫀득한 꼬끄와 달콤한 필링, 베스트 맛 3가지 마카롱 세트.', img: './마카롱.jpg' }
     ];
 
     // 이번에는 사진 교체를 위해 무조건 강제로 덮어쓰기
