@@ -48,11 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const imgHTML = menu.img ? `<div style="height:160px; width:100%; border-radius:8px; margin-bottom:12px; background:url('${menu.img}') center/cover no-repeat;"></div>` : '';
 
+            const isBest = ['m1', 'm5'].includes(menu.id);
+            const isNew = ['m11'].includes(menu.id);
+            const extraBadge = isBest ? '<span class="status-badge best">BEST</span>' : (isNew ? '<span class="status-badge new">NEW</span>' : '');
+
             card.innerHTML = `
-                ${imgHTML}
-                <span class="card-badge">${categoryEmoji}</span>
-                <h3 class="card-title">${menu.name}</h3>
-                <p class="card-desc">${menu.description || 'Cafe Warmth의 정성이 담긴 메뉴입니다.'}</p>
+                <div onclick="location.href='menus/detail.html?id=${menu.id}'" style="cursor:pointer;">
+                    ${imgHTML}
+                    <div style="position:absolute; top:18px; left:18px; display:flex; gap:5px;">
+                        ${extraBadge}
+                    </div>
+                    <span class="card-badge">${categoryEmoji}</span>
+                    <h3 class="card-title">${menu.name}</h3>
+                    <p class="card-desc">${menu.description || 'Cafe Warmth의 정성이 담긴 메뉴입니다.'}</p>
+                </div>
                 <div class="card-bottom">
                     <span class="card-price">₩${menu.price.toLocaleString()}</span>
                     <button class="btn-add-cart" onclick="addToBasket('${menu.id}', '${menu.name}')">+</button>
@@ -103,7 +112,6 @@ window.showToast = function(message) {
     
     if (window.toastTimeout) clearTimeout(window.toastTimeout);
     
-    // 1초(1000ms) 만에 빠르게 사라지도록 수정
     window.toastTimeout = setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(100px)';
@@ -111,14 +119,58 @@ window.showToast = function(message) {
 };
 
 window.addToBasket = function(id, name) {
-    let basket = JSON.parse(localStorage.getItem('cafe_basket')) || [];
-    const duplicateItem = basket.find(item => item.id === id);
-    if (duplicateItem) {
-        duplicateItem.quantity += 1;
-    } else {
-        basket.push({ id: id, name: name, quantity: 1 });
-    }
-    localStorage.setItem('cafe_basket', JSON.stringify(basket));
+    // 모달 오버레이 생성
+    const overlay = document.createElement('div');
+    overlay.id = 'detail-modal-overlay';
+    overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; display:flex; justify-content:center; align-items:center; opacity:0; transition:opacity 0.3s; padding:20px; box-sizing:border-box;';
     
-    showToast('장바구니에 담았어요!');
+    // 모달 컨테이너
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = 'background:white; width:100%; max-width:450px; height:80vh; max-height:800px; border-radius:16px; position:relative; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.2); transform:translateY(20px); transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display:flex; flex-direction:column;';
+    
+    // 닫기 버튼
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕';
+    closeBtn.style.cssText = 'position:absolute; top:15px; right:15px; z-index:10000; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:32px; height:32px; font-size:1.2rem; cursor:pointer; display:flex; justify-content:center; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333;';
+    closeBtn.onclick = closeOverlay;
+    
+    // iframe으로 상세페이지 호출 (modal=true 파라미터 추가)
+    const iframe = document.createElement('iframe');
+    iframe.src = `menus/detail.html?id=${id}&modal=true`;
+    iframe.style.cssText = 'width:100%; height:100%; border:none; flex:1;';
+    
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(iframe);
+    overlay.appendChild(modalContent);
+    document.body.appendChild(overlay);
+    
+    // 애니메이션 실행
+    requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        modalContent.style.transform = 'translateY(0)';
+    });
+    
+    function closeOverlay() {
+        overlay.style.opacity = '0';
+        modalContent.style.transform = 'translateY(20px)';
+        setTimeout(() => overlay.remove(), 300);
+    }
+    
+    // iframe에서 담기 완료 메시지가 오면 모달 닫고 토스트 띄움
+    window.addEventListener('message', function msgHandler(e) {
+        if (e.data === 'closeModal') {
+            closeOverlay();
+            window.removeEventListener('message', msgHandler);
+            showToast('장바구니에 담았어요!');
+        }
+    });
+};
+
+window.promptAdminPassword = function() {
+    const pwd = prompt('관리자 비밀번호를 입력해주세요.\\n(기본 비밀번호: 1234)');
+    if (pwd === '1234') {
+        location.href = 'admin/menus/list.html';
+    } else if (pwd !== null) {
+        alert('비밀번호가 일치하지 않습니다.');
+    }
 };

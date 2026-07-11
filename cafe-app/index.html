@@ -11,16 +11,32 @@
     <header class="main-header">
         <div class="logo" onclick="location.reload()">☕ Cafe Warmth</div>
         <nav class="nav-links">
-            <button onclick="location.href='admin/menus/list.html'" class="btn-nav admin-link">⚙️ 관리자 모드</button>
-            <button onclick="location.href='basket/list.html'" class="btn-nav">🛒 장바구니</button>
-            <button onclick="location.href='my/index.html'" class="btn-nav">👤 마이페이지</button>
+            <button onclick="promptAdminPassword()" class="btn-nav admin-link">⚙️ 관리자 모드</button>
         </nav>
     </header>
+
+    <section class="banner-section">
+        <div class="banner-track">
+            <div class="banner-slide" style="background-color: #ff9800;">
+                <div class="banner-text">
+                    <h2>신메뉴 출시! 🎉</h2>
+                    <p>상큼한 생딸기가 듬뿍</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80" alt="신메뉴">
+            </div>
+            <div class="banner-slide" style="background-color: #e53935;">
+                <div class="banner-text">
+                    <h2>메가급 할인 이벤트</h2>
+                    <p>매일 오후 2시 아메리카노 반값</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="hero-section">
         <div class="hero-content">
             <h1>오늘도 따뜻한<br>커피 한 잔 어떠세요?</h1>
-            <p>엄선된 원두로 내린 깊은 풍미의 음료를 만나보세요.</p>
+            <p>나만의 커스텀 메뉴로 빠르게 주문해보세요.</p>
         </div>
     </section>
 
@@ -37,6 +53,25 @@
         <div id="main-menu-grid" class="menu-grid">
             </div>
     </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">홈</span>
+        </a>
+        <a href="orders/list.html" class="nav-item">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">주문내역</span>
+        </a>
+        <a href="basket/list.html" class="nav-item">
+            <span class="nav-icon">🛒</span>
+            <span class="nav-label">장바구니</span>
+        </a>
+        <a href="my/index.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">마이페이지</span>
+        </a>
+    </nav>
 
     <script src="index.js?v=2"></script>
 </body>

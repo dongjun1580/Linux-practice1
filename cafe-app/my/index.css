@@ -19,3 +19,14 @@
 @media (max-width: 600px) {
     .menu-grid { grid-template-columns: 1fr; }
 }
+
+/* 스탬프 보드 */
+.stamp-board { background: white; border-radius: 16px; padding: 24px; margin-bottom: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
+.stamp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.stamp-header h3 { margin: 0; color: var(--text-main); font-size: 1.2rem; }
+.stamp-count { color: var(--text-muted); font-size: 0.9rem; }
+.stamp-count strong { color: var(--primary-color); font-size: 1.4rem; }
+.stamp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px; }
+.stamp-circle { aspect-ratio: 1; border-radius: 50%; background: #f9f9f9; border: 2px dashed #e0e0e0; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; transition: 0.3s; }
+.stamp-circle.active { background: var(--primary-color); border-color: var(--primary-color); color: white; transform: scale(1.05); }
+.stamp-notice { font-size: 0.85rem; color: #888; text-align: center; margin: 0; }

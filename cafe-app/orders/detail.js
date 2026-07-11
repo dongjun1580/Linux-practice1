@@ -29,10 +29,21 @@ document.addEventListener('DOMContentLoaded', () => {
     order.items.forEach(item => {
         const row = document.createElement('li');
         row.className = 'item-row';
+        let optionsText = '';
+        if (item.options) {
+            const opt = item.options;
+            optionsText = `<div style="font-size:0.85em; color:#777; margin-top:4px;">
+                [${opt.temp}] 사이즈: ${opt.size === 'large' ? '메가' : '기본'}, 샷 추가: ${opt.shot || 0}, 시럽: ${opt.syrup || 0}, 얼음: ${
+                    opt.ice === 'normal' ? '보통' : (opt.ice === 'less' ? '적게' : (opt.ice === 'more' ? '많이' : '해당없음'))
+                }
+            </div>`;
+        }
+
         row.innerHTML = `
             <div>
-                <span class="item-name">${item.name}</span>
-                <span class="item-qty">x ${item.quantity}잔</span>
+                <div class="item-name" style="font-weight:bold;">${item.name}</div>
+                ${optionsText}
+                <div class="item-qty" style="color:var(--primary-color); margin-top:4px;">x ${item.quantity}잔</div>
             </div>
         `;
         itemsContainer.appendChild(row);

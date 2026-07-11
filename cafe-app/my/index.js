@@ -15,6 +15,65 @@ document.addEventListener('DOMContentLoaded', () => {
         return db - da;
     });
 
+    // 스탬프 계산 로직
+    let totalItems = 0;
+    validOrders.forEach(order => {
+        if(order.items) {
+            order.items.forEach(i => totalItems += i.quantity);
+        }
+    });
+    
+    const usedCoupons = parseInt(localStorage.getItem('cafe_used_coupons') || '0');
+    const totalCoupons = Math.floor(totalItems / 10);
+    const availableCoupons = totalCoupons - usedCoupons;
+    
+    // 남은 스탬프는 총 아이템 수에서 (총 쿠폰 수 * 10)을 뺀 나머지
+    const stamps = totalItems % 10;
+    
+    document.getElementById('current-stamps').textContent = stamps;
+    const stampGrid = document.getElementById('stamp-grid');
+    if (stampGrid) {
+        for(let i=0; i<10; i++) {
+            const circle = document.createElement('div');
+            circle.className = `stamp-circle ${i < stamps ? 'active' : ''}`;
+            circle.innerHTML = i < stamps ? '☕' : '';
+            stampGrid.appendChild(circle);
+        }
+    }
+    
+    if (availableCoupons > 0) {
+        document.querySelector('.stamp-notice').innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:var(--primary-color); font-weight:bold;">🎉 사용 가능한 무료 쿠폰이 ${availableCoupons}장 있습니다!</span>
+                <button id="btn-use-coupon" style="background:var(--primary-color); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">쿠폰 사용</button>
+            </div>
+        `;
+
+        document.getElementById('btn-use-coupon').addEventListener('click', () => {
+            if (confirm('무료 아메리카노 쿠폰을 사용하시겠습니까? (장바구니에 담깁니다)')) {
+                // 사용한 쿠폰 수 증가
+                localStorage.setItem('cafe_used_coupons', usedCoupons + 1);
+                
+                // 장바구니에 무료 아메리카노 담기
+                let basket = JSON.parse(localStorage.getItem('cafe_basket')) || [];
+                basket.push({
+                    id: '1', // 보통 아메리카노 ID가 1번이라고 가정
+                    name: '아메리카노 (쿠폰)',
+                    price: 0,
+                    basePrice: 0,
+                    options: { temp: 'ICED', size: 'regular', shot: 0, syrup: 0, ice: 'normal' },
+                    quantity: 1
+                });
+                localStorage.setItem('cafe_basket', JSON.stringify(basket));
+                
+                alert('무료 쿠폰 아메리카노가 장바구니에 담겼습니다! 장바구니로 이동합니다.');
+                location.href = '../basket/list.html';
+            }
+        });
+    } else {
+        document.querySelector('.stamp-notice').innerHTML = '스탬프 10개를 모으면 무료 음료 쿠폰이 발행됩니다!';
+    }
+
     if (validOrders.length === 0) {
         // 주문 내역에 없는 내용은 안 보이게 - 마이페이지에서도 빈 주문내역 영역 자체를 깔끔하게 숨김
         if (recentSection) {
