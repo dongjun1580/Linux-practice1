@@ -1,0 +1,243 @@
+/* 카페 앱 테마: 따뜻한 브라운 & 크림 톤 */
+body {
+    background-color: var(--bg-color, #fcfaf7);
+    color: var(--text-color, #4a3e3d);
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    padding-bottom: 80px; /* 하단 고정 버튼 공간 */
+}
+
+/* 헤더 스타일 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-title {
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.btn-back, .btn-cart {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #4a3e3d;
+    text-decoration: none;
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #c08457;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* 컨테이너 */
+.container {
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Glassmorphism 카드 스타일 */
+.detail-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 32px 0 rgba(139, 125, 110, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* 이미지 */
+.image-container {
+    width: 100%;
+    height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #f0e9e4;
+    margin-bottom: 20px;
+}
+
+.menu-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 정보 영역 */
+.info-container {
+    margin-bottom: 24px;
+}
+
+.tag-status {
+    background-color: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.menu-name {
+    font-size: 1.5rem;
+    margin: 12px 0 8px 0;
+    color: #2b2221;
+}
+
+.menu-description {
+    font-size: 0.95rem;
+    color: #706361;
+    line-height: 1.5;
+    margin: 0 0 16px 0;
+}
+
+.menu-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #8a5a36;
+}
+
+/* 옵션 영역 */
+.options-section {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 20px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 1.05rem;
+    margin: 0 0 16px 0;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.option-label {
+    font-size: 0.95rem;
+    color: #5c4f4e;
+}
+
+.option-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-option {
+    background: #f1ede9;
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #5c4f4e;
+    transition: all 0.2s;
+}
+
+.btn-option.active {
+    background: #8a5a36;
+    color: white;
+    font-weight: bold;
+}
+
+/* 수량 및 총 금액 */
+.quantity-section {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    background: #f1ede9;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.btn-qty {
+    background: none;
+    border: none;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.qty-number {
+    padding: 0 16px;
+    font-weight: bold;
+}
+
+.total-price-wrapper {
+    text-align: right;
+}
+
+.total-label {
+    font-size: 0.85rem;
+    color: #8b7d7a;
+    display: block;
+}
+
+.total-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #c08457;
+}
+
+/* 하단 푸터 액션 */
+.footer-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.btn-primary, .btn-secondary {
+    flex: 1;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #8a5a36;
+    color: white;
+}
+
+.btn-secondary {
+    background: #f1ede9;
+    color: #5c4f4e;
+}
