@@ -8,101 +8,85 @@
     <link rel="stylesheet" href="detail.css">
 </head>
 <body>
-    <header class="main-header" style="display:none;">
-        <h1 id="menu-title">메뉴 상세</h1>
+    <header class="header" id="modal-header">
+        <button type="button" class="btn-back" onclick="history.back()">←</button>
+        <h1 class="header-title">메뉴 상세</h1>
     </header>
 
-    <main class="detail-container">
-        <!-- 상단 이미지 영역 -->
-        <div class="menu-image-area">
-            <img id="menu-img" src="" alt="메뉴 이미지" style="width:100%; max-height:250px; object-fit:cover; border-radius:12px;">
-        </div>
-
-        <div class="menu-info-area">
-            <h2 id="menu-name" style="margin-top:15px; color:var(--text-main);">메뉴 이름</h2>
-            <p id="menu-desc" style="color:#666; font-size:0.9rem;">메뉴 설명이 들어갑니다.</p>
+    <main class="container">
+        <article class="detail-card">
+            <div class="image-container">
+                <img id="menu-img" src="" alt="메뉴 이미지" class="menu-image">
+            </div>
             
-            <div class="price-section">
-                <span style="font-weight:bold; color:var(--text-main);">기본 가격:</span>
-                <span id="base-price" style="font-weight:bold; color:var(--primary-color);">0원</span>
-            </div>
-        </div>
-
-        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-
-        <!-- 퍼스널 옵션 영역 -->
-        <div class="options-area">
-            <h3 style="color:var(--text-main); margin-bottom:15px;">퍼스널 옵션</h3>
-
-            <!-- 온도 옵션 -->
-            <div class="option-row">
-                <span class="option-label">온도</span>
-                <div class="radio-group">
-                    <label class="radio-label">
-                        <input type="radio" name="temperature" value="HOT" checked> <span>♨️ HOT</span>
-                    </label>
-                    <label class="radio-label">
-                        <input type="radio" name="temperature" value="ICED"> <span>🧊 ICED</span>
-                    </label>
+            <div class="info-container">
+                <h2 id="menu-name" class="menu-name">메뉴 이름</h2>
+                <p id="menu-desc" class="menu-description">메뉴 설명이 들어갑니다.</p>
+                <div class="option-group" style="margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+                    <span class="option-label" style="font-weight:bold; font-size:1.1rem;">기본 가격</span>
+                    <span id="base-price" class="menu-price" style="font-size:1.2rem;">0원</span>
                 </div>
             </div>
 
-            <!-- 사이즈 옵션 -->
-            <div class="option-row">
-                <span class="option-label">사이즈 업 (+500원)</span>
-                <div class="radio-group">
-                    <label class="radio-label">
-                        <input type="radio" name="size" value="기본" checked> <span>기본</span>
-                    </label>
-                    <label class="radio-label">
-                        <input type="radio" name="size" value="메가"> <span>메가</span>
-                    </label>
+            <section class="options-section">
+                <h3 class="section-title">퍼스널 옵션</h3>
+                
+                <div class="option-group">
+                    <span class="option-label">온도</span>
+                    <div class="option-buttons">
+                        <button type="button" class="btn-option active" data-type="temp" data-value="HOT">♨️ HOT</button>
+                        <button type="button" class="btn-option" data-type="temp" data-value="ICED">🧊 ICED</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 샷 추가 -->
-            <div class="option-row">
-                <span class="option-label">샷 추가 (+500원/샷)</span>
-                <div class="stepper">
-                    <button type="button" class="btn-stepper" id="btn-shot-minus">-</button>
-                    <span id="shot-count" style="width:30px; text-align:center; display:inline-block;">0</span>
-                    <button type="button" class="btn-stepper" id="btn-shot-plus">+</button>
+                <div class="option-group">
+                    <span class="option-label">사이즈 업 (+500원)</span>
+                    <div class="option-buttons">
+                        <button type="button" class="btn-option active" data-type="size" data-value="기본">기본</button>
+                        <button type="button" class="btn-option" data-type="size" data-value="메가">메가</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 시럽 추가 -->
-            <div class="option-row">
-                <span class="option-label">시럽 추가 (+500원/펌프)</span>
-                <div class="stepper">
-                    <button type="button" class="btn-stepper" id="btn-syrup-minus">-</button>
-                    <span id="syrup-count" style="width:30px; text-align:center; display:inline-block;">0</span>
-                    <button type="button" class="btn-stepper" id="btn-syrup-plus">+</button>
+                <div class="option-group">
+                    <span class="option-label">샷 추가 (+500원/샷)</span>
+                    <div class="quantity-selector">
+                        <button type="button" id="btn-shot-minus" class="btn-qty">-</button>
+                        <span id="shot-count" class="qty-number">0</span>
+                        <button type="button" id="btn-shot-plus" class="btn-qty">+</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 얼음 양 -->
-            <div class="option-row">
-                <span class="option-label">얼음 양</span>
-                <select id="ice-amount" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
-                    <option value="적게">적게</option>
-                    <option value="보통" selected>보통</option>
-                    <option value="많이">많이</option>
-                </select>
-            </div>
-        </div>
+                <div class="option-group">
+                    <span class="option-label">시럽 추가 (+500원/펌프)</span>
+                    <div class="quantity-selector">
+                        <button type="button" id="btn-syrup-minus" class="btn-qty">-</button>
+                        <span id="syrup-count" class="qty-number">0</span>
+                        <button type="button" id="btn-syrup-plus" class="btn-qty">+</button>
+                    </div>
+                </div>
 
-        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+                <div class="option-group">
+                    <span class="option-label">얼음 양</span>
+                    <div class="option-buttons">
+                        <button type="button" class="btn-option" data-type="ice" data-value="적게">적게</button>
+                        <button type="button" class="btn-option active" data-type="ice" data-value="보통">보통</button>
+                        <button type="button" class="btn-option" data-type="ice" data-value="많이">많이</button>
+                    </div>
+                </div>
+            </section>
 
-        <!-- 결제 금액 영역 -->
-        <div class="total-area" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <span style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">총 결제금액:</span>
-            <span id="total-price" style="font-weight:bold; font-size:1.4rem; color:var(--primary-color);">0원</span>
-        </div>
-
-        <button id="btn-add-cart" class="btn-primary" style="width:100%; padding:15px; font-size:1.1rem; border-radius:8px; border:none; background:var(--primary-color); color:white; cursor:pointer;">
-            🛒 장바구니 담기
-        </button>
+            <section class="quantity-section">
+                <div class="total-price-wrapper" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                    <span class="total-label" style="font-size:1.1rem; color:#5c4f4e;">총 결제금액:</span>
+                    <span id="total-price" class="total-price">0원</span>
+                </div>
+            </section>
+        </article>
     </main>
+
+    <footer class="footer-actions">
+        <button type="button" id="btn-add-cart" class="btn-primary" style="width:100%;">🛒 장바구니 담기</button>
+    </footer>
 
     <script src="detail.js"></script>
 </body>
