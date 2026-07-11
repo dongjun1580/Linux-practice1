@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(location.search);
-    const orderId = params.get('id');
+    const orderId = params.get('id') || localStorage.getItem('cafe_current_order_id');
 
     if (!orderId) {
         alert('잘못된 접근입니다.');

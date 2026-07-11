@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const extraBadge = isBest ? '<span class="status-badge best">BEST</span>' : (isNew ? '<span class="status-badge new">NEW</span>' : '');
 
             card.innerHTML = `
-                <div onclick="location.href='menus/detail.html?id=${menu.id}'" style="cursor:pointer;">
+                <div onclick="window.goToDetail('${menu.id}')" style="cursor:pointer;">
                     ${imgHTML}
                     <div style="position:absolute; top:18px; left:18px; display:flex; gap:5px;">
                         ${extraBadge}
@@ -118,7 +118,16 @@ window.showToast = function(message) {
     }, 1000);
 };
 
+window.goToDetail = function(id) {
+    localStorage.setItem('cafe_current_menu_id', id);
+    localStorage.setItem('cafe_is_modal', 'false');
+    location.href = 'menus/detail.html';
+};
+
 window.addToBasket = function(id, name) {
+    localStorage.setItem('cafe_current_menu_id', id);
+    localStorage.setItem('cafe_is_modal', 'true');
+    
     // 모달 오버레이 생성
     const overlay = document.createElement('div');
     overlay.id = 'detail-modal-overlay';
@@ -134,9 +143,9 @@ window.addToBasket = function(id, name) {
     closeBtn.style.cssText = 'position:absolute; top:15px; right:15px; z-index:10000; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:32px; height:32px; font-size:1.2rem; cursor:pointer; display:flex; justify-content:center; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333;';
     closeBtn.onclick = closeOverlay;
     
-    // iframe으로 상세페이지 호출 (modal=true 파라미터 추가)
+    // iframe으로 상세페이지 호출 (query string 유실 대비 localStorage 사용)
     const iframe = document.createElement('iframe');
-    iframe.src = `menus/detail.html?id=${id}&modal=true`;
+    iframe.src = `menus/detail.html`;
     iframe.style.cssText = 'width:100%; height:100%; border:none; flex:1;';
     
     modalContent.appendChild(closeBtn);

@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.className = 'basket-item';
             li.innerHTML = `
-                <div class="item-info" onclick="location.href='../menus/detail.html?id=${item.id}'" style="cursor:pointer; flex:1;" title="메뉴 상세 보기">
+                <div class="item-info" onclick="window.goToDetail('${item.id}')" style="cursor:pointer; flex:1;" title="메뉴 상세 보기">
                     <span class="item-name" style="text-decoration:underline; text-underline-offset:2px;">${item.name}</span>
                     ${optionsText}
                     <span class="item-price" style="display:block; margin-top:4px;">단가: ₩${price.toLocaleString()}</span>
@@ -109,3 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderBasket();
 });
+
+window.goToDetail = function(id) {
+    localStorage.setItem('cafe_current_menu_id', id);
+    localStorage.setItem('cafe_is_modal', 'false');
+    location.href = '../menus/detail.html';
+};

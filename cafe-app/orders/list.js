@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const card = document.createElement('div');
         card.className = 'order-item';
-        card.onclick = () => { location.href = `detail.html?id=${order.id}`; };
+        card.onclick = () => window.goToOrderDetail(order.id);
 
         card.innerHTML = `
             <div class="order-header">
@@ -68,3 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         listContainer.appendChild(card);
     });
 });
+
+window.goToOrderDetail = function(id) {
+    localStorage.setItem('cafe_current_order_id', id);
+    location.href = 'detail.html';
+};

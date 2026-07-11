@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.cssText = "background: white; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); transition: 0.2s;";
         card.onmouseover = () => card.style.borderColor = 'var(--primary-color)';
         card.onmouseout = () => card.style.borderColor = '#eee';
-        card.onclick = () => location.href = `../orders/detail.html?id=${order.id}`;
+        card.onclick = () => window.goToOrderDetail(order.id);
 
         card.innerHTML = `
             <div>
@@ -112,3 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         recentList.appendChild(card);
     });
 });
+
+window.goToOrderDetail = function(id) {
+    localStorage.setItem('cafe_current_order_id', id);
+    location.href = '../orders/detail.html';
+};
