@@ -107,6 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPrice = parseInt(totalPriceEl.textContent.replace(/[^0-9]/g, ''));
 
         try {
+            // [중요 에러 방지] 장바구니에 담긴 메뉴들을 Supabase menus 테이블에 강제로 집어넣어 외래키 에러를 예방합니다.
+            const menusToSync = basket.map(item => ({
+                id: item.id.toString(),
+                name: item.name,
+                price: item.price !== undefined ? item.price : 0,
+                category: '기타' // 기본 카테고리
+            }));
+            
+            try {
+                // onConflict로 id가 이미 있으면 무시하거나 업데이트하도록 처리 (에러 안남)
+                await window.sbClient.from('menus').upsert(menusToSync, { onConflict: 'id', ignoreDuplicates: true });
+            } catch(syncErr) {
+                console.warn('메뉴 동기화 무시됨 (RLS 등):', syncErr);
+            }
+
             // 1. orders 테이블에 주문서 저장
             const { data: orderData, error: orderError } = await window.sbClient
                 .from('orders')
