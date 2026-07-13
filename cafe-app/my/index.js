@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         let userId = null;
         let myOrderIds = JSON.parse(localStorage.getItem('cafe_my_order_ids')) || [];
+        // 예전 버전의 'order-123' 같은 잘못된 형식을 걸러내고 순수 UUID만 남깁니다 (Supabase 에러 방지)
+        myOrderIds = myOrderIds.filter(id => typeof id === 'string' && id.length === 36 && id.includes('-'));
 
         if (window.sbClient) {
             const { data: { session } } = await window.sbClient.auth.getSession();
@@ -31,10 +33,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (query) {
             const { data, error } = await query;
+            if (error) {
+                console.error("주문 내역 에러:", error);
+                document.querySelector('.recent-orders').insertAdjacentHTML('beforebegin', `<div style="color:red; background:#ffebee; padding:10px; border-radius:5px; margin-bottom:15px;">스탬프 로드 실패: ${error.message}</div>`);
+            }
             if (!error && data) ordersData = data;
         }
     } catch(e) {
         console.error('주문 내역 불러오기 실패:', e);
+        document.querySelector('.recent-orders').insertAdjacentHTML('beforebegin', `<div style="color:red; background:#ffebee; padding:10px; border-radius:5px; margin-bottom:15px;">스탬프 로드 실패: ${e.message}</div>`);
     }
     
     // 스탬프 계산 로직
