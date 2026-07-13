@@ -92,5 +92,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error("대시보드 데이터를 불러오는 중 오류 발생:", error);
+        const main = document.querySelector('main');
+        if (main) {
+            main.insertAdjacentHTML('beforeend', `<div style="color:red; background:#ffebee; padding:20px; border-radius:8px; margin-top:20px;"><strong>앗! 화면을 그리는 중 에러가 발생했습니다:</strong><br>${error.message || JSON.stringify(error)}</div>`);
+        }
     }
 });
