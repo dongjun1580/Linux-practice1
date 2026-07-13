@@ -1,25 +1,47 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const recentList = document.getElementById('recent-orders-list');
     const recentSection = document.querySelector('.recent-orders');
     
-    let orders = [];
-    try {
-        const parsed = JSON.parse(localStorage.getItem('cafe_orders'));
-        if(Array.isArray(parsed)) orders = parsed;
-    } catch(e) {}
+    let ordersData = [];
     
-    const validOrders = orders.filter(o => o && o.id);
-    validOrders.sort((a, b) => {
-        const da = a.date ? new Date(a.date).getTime() : 0;
-        const db = b.date ? new Date(b.date).getTime() : 0;
-        return db - da;
-    });
+    try {
+        let userId = null;
+        let myOrderIds = JSON.parse(localStorage.getItem('cafe_my_order_ids')) || [];
 
+        if (window.sbClient) {
+            const { data: { session } } = await window.sbClient.auth.getSession();
+            if (session?.user) {
+                userId = session.user.id;
+            }
+        }
+
+        let query = window.sbClient
+            .from('orders')
+            .select('id, status, total_price, created_at, order_items(quantity, menus(name))')
+            .order('created_at', { ascending: false });
+
+        if (userId) {
+            query = query.eq('user_id', userId);
+        } else if (myOrderIds.length > 0) {
+            query = query.in('id', myOrderIds);
+        } else {
+            // 비회원이면서 주문 번호도 없으면 빈 배열
+            query = null;
+        }
+
+        if (query) {
+            const { data, error } = await query;
+            if (!error && data) ordersData = data;
+        }
+    } catch(e) {
+        console.error('주문 내역 불러오기 실패:', e);
+    }
+    
     // 스탬프 계산 로직
     let totalItems = 0;
-    validOrders.forEach(order => {
-        if(order.items) {
-            order.items.forEach(i => totalItems += i.quantity);
+    ordersData.forEach(order => {
+        if(order.order_items) {
+            order.order_items.forEach(i => totalItems += i.quantity);
         }
     });
     
@@ -74,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.stamp-notice').innerHTML = '스탬프 10개를 모으면 무료 음료 쿠폰이 발행됩니다!';
     }
 
-    if (validOrders.length === 0) {
+    if (ordersData.length === 0) {
         // 주문 내역에 없는 내용은 안 보이게 - 마이페이지에서도 빈 주문내역 영역 자체를 깔끔하게 숨김
         if (recentSection) {
             recentSection.style.display = 'none';
@@ -83,18 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 최근 2건만 표시
-    const topOrders = validOrders.slice(0, 2);
+    const topOrders = ordersData.slice(0, 2);
 
     topOrders.forEach(order => {
-        const itemDate = order.date ? new Date(order.date) : new Date();
+        const itemDate = order.created_at ? new Date(order.created_at) : new Date();
         const dateString = !isNaN(itemDate) ? `${itemDate.getFullYear()}.${String(itemDate.getMonth()+1).padStart(2,'0')}.${String(itemDate.getDate()).padStart(2,'0')}` : '날짜 모름';
         
         let title = '주문 상품';
-        if(order.items && order.items.length > 0) {
-            title = order.items[0].name;
-            if(order.items.length > 1) title += ` 외 ${order.items.length - 1}건`;
+        if(order.order_items && order.order_items.length > 0) {
+            title = order.order_items[0].menus?.name || '메뉴';
+            if(order.order_items.length > 1) title += ` 외 ${order.order_items.length - 1}건`;
         }
-        const price = order.totalPrice ? order.totalPrice.toLocaleString() : '0';
+        const price = order.total_price ? order.total_price.toLocaleString() : '0';
 
         const card = document.createElement('div');
         card.style.cssText = "background: white; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); transition: 0.2s;";
