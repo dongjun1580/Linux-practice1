@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
         } catch (error) {
             console.error("주문 처리 중 오류 발생:", error);
-            alert("주문 접수에 실패했습니다. 잠시 후 다시 시도해주세요.");
+            alert(`주문 접수에 실패했습니다: ${error.message || JSON.stringify(error)}\n잠시 후 다시 시도해주세요.`);
         }
     });
 

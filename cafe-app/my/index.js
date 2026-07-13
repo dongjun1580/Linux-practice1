@@ -83,10 +83,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // 사용한 쿠폰 수 증가
                 localStorage.setItem('cafe_used_coupons', usedCoupons + 1);
                 
-                // 장바구니에 무료 아메리카노 담기
+                // 로컬 메뉴 데이터에서 아메리카노 찾기 (없으면 첫 번째 메뉴 사용)
+                let localMenus = [];
+                try { localMenus = JSON.parse(localStorage.getItem('cafe_menus')) || []; } catch(e){}
+                
+                let targetMenu = localMenus.find(m => m.name.includes('아메리카노'));
+                if (!targetMenu && localMenus.length > 0) targetMenu = localMenus[0];
+                
+                const menuId = targetMenu ? targetMenu.id : '1';
+
+                // 장바구니에 무료 음료 담기
                 let basket = JSON.parse(localStorage.getItem('cafe_basket')) || [];
                 basket.push({
-                    id: '1', // 보통 아메리카노 ID가 1번이라고 가정
+                    id: menuId, 
                     name: '아메리카노 (쿠폰)',
                     price: 0,
                     basePrice: 0,
