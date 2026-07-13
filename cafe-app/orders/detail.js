@@ -38,9 +38,9 @@ async function renderOrderDetail(orderId) {
                 status,
                 created_at,
                 order_items (
+                    menu_id,
                     quantity,
-                    options,
-                    menus ( name )
+                    options
                 )
             `)
             .eq('id', orderId)
@@ -71,6 +71,9 @@ async function renderOrderDetail(orderId) {
         const itemsContainer = document.getElementById('order-items-list');
         itemsContainer.innerHTML = ''; // 초기화
         
+        let localMenus = [];
+        try { localMenus = JSON.parse(localStorage.getItem('cafe_menus')) || []; } catch(e){}
+
         if (order.order_items) {
             order.order_items.forEach(item => {
                 const row = document.createElement('li');
@@ -86,9 +89,12 @@ async function renderOrderDetail(orderId) {
                     </div>`;
                 }
 
+                const menuObj = localMenus.find(m => m.id === item.menu_id);
+                const menuName = menuObj ? menuObj.name : '맛있는 메뉴';
+
                 row.innerHTML = `
                     <div>
-                        <div class="item-name" style="font-weight:bold;">${item.menus?.name || '알 수 없는 메뉴'}</div>
+                        <div class="item-name" style="font-weight:bold;">${menuName}</div>
                         ${optionsText}
                         <div class="item-qty" style="color:var(--primary-color); margin-top:4px;">x ${item.quantity}잔</div>
                     </div>

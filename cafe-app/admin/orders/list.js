@@ -48,8 +48,9 @@ async function renderOrders() {
                 status,
                 created_at,
                 order_items (
+                    menu_id,
                     quantity,
-                    menus ( name )
+                    options
                 )
             `)
             .order('created_at', { ascending: false });
@@ -76,15 +77,21 @@ async function renderOrders() {
             return;
         }
 
+        // 로컬 메뉴 매핑
+        let localMenus = [];
+        try { localMenus = JSON.parse(localStorage.getItem('cafe_menus')) || []; } catch(e){}
+
         activeOrders.forEach(order => {
             const itemDate = new Date(order.created_at);
-            const dateString = `${String(itemDate.getMonth()+1).padStart(2,'0')}/${String(itemDate.getDate()).padStart(2,'0')} ${String(itemDate.getHours()).padStart(2,'0')}:${String(itemDate.getMinutes()).padStart(2,'0')}`;
+            const dateString = `${itemDate.getFullYear()}.${String(itemDate.getMonth()+1).padStart(2,'0')}.${String(itemDate.getDate()).padStart(2,'0')} ${String(itemDate.getHours()).padStart(2,'0')}:${String(itemDate.getMinutes()).padStart(2,'0')}`;
             
-            let title = '주문 내역 없음';
-            if(order.order_items && order.order_items.length > 0) {
-                // menus가 null이 아닐 경우 이름 추출
-                const firstName = order.order_items[0].menus?.name || '알 수 없는 메뉴';
-                title = firstName;
+            const shortId = order.id.split('-')[0];
+            
+            let title = '';
+            if (order.order_items && order.order_items.length > 0) {
+                const firstMenuObj = localMenus.find(m => m.id === order.order_items[0].menu_id);
+                const firstMenuName = firstMenuObj ? firstMenuObj.name : '맛있는 메뉴';
+                title = firstMenuName;
                 if(order.order_items.length > 1) {
                     title += ` 외 ${order.order_items.length - 1}건`;
                 }
@@ -102,8 +109,7 @@ async function renderOrders() {
                 actionBtn = `<button class="btn-view" style="background:#1e88e5; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="updateOrderStatus('${order.id}', '수령 완료')">🛎️ 수령 완료</button>`;
             }
 
-            // UUID가 너무 길어서 앞 8자리만 자름
-            const shortId = order.id.split('-')[0];
+
 
             tr.innerHTML = `
                 <td>${dateString}</td>

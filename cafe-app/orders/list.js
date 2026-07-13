@@ -44,7 +44,9 @@ async function renderOrderList() {
                 status,
                 created_at,
                 order_items (
-                    menus ( name )
+                    menu_id,
+                    quantity,
+                    options
                 )
             `)
             .order('created_at', { ascending: false });
@@ -91,8 +93,13 @@ async function renderOrderList() {
         }
         
         let title = '주문 상품';
+        
+        let localMenus = [];
+        try { localMenus = JSON.parse(localStorage.getItem('cafe_menus')) || []; } catch(e){}
+
         if(order.order_items && order.order_items.length > 0) {
-            title = order.order_items[0].menus?.name || '알 수 없는 메뉴';
+            const firstMenuObj = localMenus.find(m => m.id === order.order_items[0].menu_id);
+            title = firstMenuObj ? firstMenuObj.name : '맛있는 메뉴';
             if(order.order_items.length > 1) {
                 title += ` 외 ${order.order_items.length - 1}건`;
             }
