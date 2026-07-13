@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 대시보드 - Cafe Warmth</title>
+    <!-- 주소 끝에 슬래시가 없으면 자동으로 붙여주는 스크립트 -->
+    <script>
+        if (window.location.pathname.endsWith('/admin')) {
+            window.location.replace(window.location.pathname + '/');
+        }
+    </script>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="index.css">
 </head>

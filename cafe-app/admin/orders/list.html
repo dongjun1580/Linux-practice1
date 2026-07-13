@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>고객 주문 관리 - 관리자</title>
+    <script>
+        if (window.location.pathname.endsWith('/orders')) {
+            window.location.replace(window.location.pathname + '/');
+        }
+    </script>
     <link rel="stylesheet" href="../../css/variables.css">
     <link rel="stylesheet" href="list.css">
 </head>
