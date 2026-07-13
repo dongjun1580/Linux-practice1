@@ -78,25 +78,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
         `;
 
-        document.getElementById('btn-use-coupon').addEventListener('click', () => {
+        document.getElementById('btn-use-coupon').addEventListener('click', async () => {
             if (confirm('무료 아메리카노 쿠폰을 사용하시겠습니까? (장바구니에 담깁니다)')) {
                 // 사용한 쿠폰 수 증가
                 localStorage.setItem('cafe_used_coupons', usedCoupons + 1);
                 
-                // 로컬 메뉴 데이터에서 아메리카노 찾기 (없으면 첫 번째 메뉴 사용)
-                let localMenus = [];
-                try { localMenus = JSON.parse(localStorage.getItem('cafe_menus')) || []; } catch(e){}
+                let menuId = '1';
+                let menuName = '아메리카노 (쿠폰)';
                 
-                let targetMenu = localMenus.find(m => m.name.includes('아메리카노'));
-                if (!targetMenu && localMenus.length > 0) targetMenu = localMenus[0];
-                
-                const menuId = targetMenu ? targetMenu.id : '1';
+                // 실제 DB에서 아메리카노 메뉴 ID 가져오기 (외래키 제약조건 방지)
+                if (window.sbClient) {
+                    const { data: americano } = await window.sbClient
+                        .from('menus')
+                        .select('id, name')
+                        .like('name', '%아메리카노%')
+                        .limit(1);
+                        
+                    if (americano && americano.length > 0) {
+                        menuId = americano[0].id;
+                        menuName = americano[0].name + ' (쿠폰)';
+                    } else {
+                        // 아메리카노가 없으면 아무 메뉴나 하나 가져오기
+                        const { data: anyMenu } = await window.sbClient
+                            .from('menus')
+                            .select('id, name')
+                            .limit(1);
+                        if (anyMenu && anyMenu.length > 0) {
+                            menuId = anyMenu[0].id;
+                            menuName = anyMenu[0].name + ' (무료 쿠폰)';
+                        }
+                    }
+                }
 
                 // 장바구니에 무료 음료 담기
                 let basket = JSON.parse(localStorage.getItem('cafe_basket')) || [];
                 basket.push({
                     id: menuId, 
-                    name: '아메리카노 (쿠폰)',
+                    name: menuName,
                     price: 0,
                     basePrice: 0,
                     options: { temp: 'ICED', size: 'regular', shot: 0, syrup: 0, ice: 'normal' },
