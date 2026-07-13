@@ -13,12 +13,20 @@
         <nav><a href="../index.html">대시보드 가기</a></nav>
     </header>
     <main class="admin-container">
+        <div class="orders-board" style="margin-bottom:20px; padding:20px; display:flex; justify-content:space-between; align-items:center; background:white; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+            <h2 style="margin:0; font-size:1.3rem;">전체 주문 내역</h2>
+            <div style="font-size:1.2rem; font-weight:bold; color:var(--text-main);">
+                총 매출: <span id="total-revenue" style="color:#e53935; font-size:1.4rem;">₩0</span>
+            </div>
+        </div>
+
         <div class="orders-board">
             <table class="order-table">
                 <thead>
                     <tr>
                         <th>주문 일시</th>
                         <th>주문 번호</th>
+                        <th>주문자</th>
                         <th>주문 요약</th>
                         <th>결제 금액</th>
                         <th>진행 상태</th>
@@ -31,6 +39,9 @@
             </table>
         </div>
     </main>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/supabase.js"></script>
     <script src="list.js"></script>
 </body>
 </html>

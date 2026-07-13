@@ -193,11 +193,15 @@ body {
     top: 18px;
     right: 18px;
     font-size: 0.75rem;
-    background: rgba(141, 110, 99, 0.08);
-    padding: 4px 8px;
-    border-radius: 6px;
-    color: var(--primary-color);
-    font-weight: bold;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: var(--primary-color, #6b4f4f);
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10;
 }
 
 .status-badge {

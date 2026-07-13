@@ -51,6 +51,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedSize = '기본';
     let selectedIce = '보통';
 
+    // 카테고리별 옵션 UI 숨기기
+    if (currentMenu.category === 'dessert') {
+        // 디저트는 옵션 전체 숨기기
+        const optSec = document.querySelector('.options-section');
+        if (optSec) optSec.style.display = 'none';
+        selectedTemp = '해당없음';
+        selectedIce = '해당없음';
+    } else if (currentMenu.category === 'beverage') {
+        // 음료(에이드/스무디)는 아이스 전용, 샷 및 시럽 추가 불가
+        const optTemp = document.getElementById('opt-temp');
+        const optShot = document.getElementById('opt-shot');
+        const optSyrup = document.getElementById('opt-syrup');
+        if (optTemp) optTemp.style.display = 'none';
+        if (optShot) optShot.style.display = 'none';
+        if (optSyrup) optSyrup.style.display = 'none'; // 시럽 추가 옵션 숨김
+        selectedTemp = 'ICED'; // 기본값을 ICED로 고정
+    }
+
     const elTotalPrice = document.getElementById('total-price');
     const elShotCount = document.getElementById('shot-count');
     const elSyrupCount = document.getElementById('syrup-count');
@@ -110,10 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let basket = JSON.parse(localStorage.getItem('cafe_basket')) || [];
         
         const item = {
-            id: Date.now().toString(),
-            menuId: currentMenu.id,
+            id: currentMenu.id,
+            cartId: Date.now().toString(),
             name: currentMenu.name,
             basePrice: currentMenu.price,
+            quantity: 1,
             options: {
                 temp: selectedTemp,
                 size: selectedSize,

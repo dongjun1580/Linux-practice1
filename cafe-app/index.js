@@ -7,26 +7,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuGrid = document.getElementById('main-menu-grid');
     const tabButtons = document.querySelectorAll('.tab-btn');
 
-    const defaultMenus = [
-        { id: 'm1', category: 'coffee', name: '아메리카노', price: 4500, description: '최상급 원두로 내린 깔끔하고 진한 에스프레소에 시원한 물을 더한 아메리카노.', img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&q=80' },
-        { id: 'm2', category: 'coffee', name: '카페라떼', price: 5000, description: '고소한 에스프레소와 부드러운 스팀 밀크의 완벽한 조화.', img: './img/카페라떼.jpg' },
-        { id: 'm3', category: 'coffee', name: '바닐라 라떼', price: 5500, description: '달콤한 바닐라 시럽과 에스프레소가 어우러진 기분 좋은 달콤함.', img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=400&q=80' },
-        { id: 'm4', category: 'coffee', name: '콜드브루', price: 5000, description: '12시간 이상 차갑게 우려내어 쓴맛이 적고 깔끔한 풍미의 커피.', img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=400&q=80' },
-        
-        { id: 'm5', category: 'beverage', name: '딸기 스무디', price: 6000, description: '상큼한 생딸기를 듬뿍 갈아 만든 시원한 스무디.', img: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80' },
-        { id: 'm6', category: 'beverage', name: '자몽 에이드', price: 5500, description: '톡 쏘는 탄산과 쌉싸름한 자몽 청이 만난 청량감 가득한 에이드.', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=80' },
-        { id: 'm7', category: 'beverage', name: '밀크티', price: 5500, description: '진하게 우려낸 홍차에 부드러운 우유를 더한 클래식 밀크티.', img: './img/밀크티.jpg' },
-        { id: 'm8', category: 'beverage', name: '제주 녹차 라떼', price: 5500, description: '제주산 유기농 말차 가루로 만든 진하고 쌉쌀한 매력의 라떼.', img: './img/녹차라떼.jpg' },
+    // 로그인 상태 확인 및 네비게이션 렌더링
+    checkAuthAndRenderNav();
 
-        { id: 'm9', category: 'dessert', name: '티라미수', price: 6500, description: '부드러운 레이디핑거와 진한 마스카포네 치즈의 앙상블.', img: './img/티라미수.jpg' },
-        { id: 'm10', category: 'dessert', name: '뉴욕 치즈 케이크', price: 6000, description: '꾸덕하고 진한 크림치즈의 풍미가 가득한 치즈 케이크.', img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=400&q=80' },
-        { id: 'm11', category: 'dessert', name: '크로플', price: 5000, description: '겉은 바삭하고 속은 쫄깃한 와플에 메이플 시럽을 곁들였습니다.', img: './img/크로플.jpg' },
-        { id: 'm12', category: 'dessert', name: '마카롱 세트', price: 7500, description: '쫀득한 꼬끄와 달콤한 필링, 베스트 맛 3가지 마카롱 세트.', img: './img/마카롱.jpg' }
-    ];
+    // Supabase DB에서 가져온 메뉴 데이터를 담을 변수
+    let menus = [];
 
-    // 이번에는 사진 교체를 위해 무조건 강제로 덮어쓰기
-    let menus = defaultMenus;
-    localStorage.setItem('cafe_menus', JSON.stringify(menus));
+    // Supabase에서 메뉴 목록 불러오기
+    async function loadMenusFromDB() {
+        try {
+            // DB의 menus 테이블에서 모든(*) 데이터 가져오기
+            const { data, error } = await window.sbClient.from('menus').select('*');
+            
+            if (error) throw error;
+            
+            menus = data;
+            // 다른 파일(상세, 장바구니)에서도 쉽게 쓰도록 로컬스토리지에 최신 데이터 캐싱
+            localStorage.setItem('cafe_menus', JSON.stringify(menus));
+            
+            renderMainMenus(); // 데이터 로딩 완료 후 화면 렌더링
+        } catch (error) {
+            console.error("메뉴 정보를 불러오는 중 에러 발생:", error);
+            menuGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 50px 0; color:#e53935;">메뉴 데이터를 불러오지 못했습니다.</p>';
+        }
+    }
 
     function renderMainMenus(filterCategory = 'all') {
         menuGrid.innerHTML = ''; 
@@ -48,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const imgHTML = menu.img ? `<div style="height:160px; width:100%; border-radius:8px; margin-bottom:12px; background:url('${menu.img}') center/cover no-repeat;"></div>` : '';
 
-            const isBest = ['m1', 'm5'].includes(menu.id);
-            const isNew = ['m11'].includes(menu.id);
+            const isBest = menu.is_best === true;
+            const isNew = menu.is_new === true;
             const extraBadge = isBest ? '<span class="status-badge best">BEST</span>' : (isNew ? '<span class="status-badge new">NEW</span>' : '');
 
             card.innerHTML = `
@@ -80,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    renderMainMenus();
+    // 화면 진입 시 DB에서 메뉴 로딩 시작
+    loadMenusFromDB();
 });
 
 // 토스트 알림 함수
@@ -175,11 +180,45 @@ window.addToBasket = function(id, name) {
     });
 };
 
-window.promptAdminPassword = function() {
-    const pwd = prompt('관리자 비밀번호를 입력해주세요.\\n(기본 비밀번호: 1234)');
-    if (pwd === '1234') {
-        location.href = 'admin/menus/list.html';
-    } else if (pwd !== null) {
-        alert('비밀번호가 일치하지 않습니다.');
+async function checkAuthAndRenderNav() {
+    const nav = document.getElementById('auth-nav');
+    if (!nav) return;
+    
+    try {
+        // Supabase에서 현재 로그인된 사용자 정보 가져오기
+        const { data: { session } } = await window.sbClient.auth.getSession();
+        const user = session?.user;
+
+        if (user) {
+            // DB의 'profiles' 테이블에서 현재 로그인한 유저의 정보를 가져옵니다.
+            const { data: profile } = await window.sbClient
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+            
+            // 가져온 권한이 'admin'인지 확인
+            const isAdmin = profile?.role === 'admin';
+            
+            nav.innerHTML = `
+                <span style="font-size:0.9rem; color:#666; margin-right:15px; font-weight:bold;">${user.email.split('@')[0]}님</span>
+                ${isAdmin ? '<button onclick="location.href=\'admin/menus/list.html\'" class="btn-nav admin-link" style="background:#e53935; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; margin-right:10px;">⚙️ 관리자 모드</button>' : ''}
+                <button onclick="logout()" class="btn-nav" style="border:1px solid #ddd; background:white; padding:8px 12px; border-radius:6px; cursor:pointer;">로그아웃</button>
+            `;
+        } else {
+            nav.innerHTML = `
+                <button onclick="location.href='auth/login.html'" class="btn-nav" style="background:var(--primary-color); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">로그인</button>
+            `;
+        }
+    } catch(error) {
+        console.error("인증 정보를 가져오는 중 에러 발생:", error);
+        nav.innerHTML = `
+            <button onclick="location.href='auth/login.html'" class="btn-nav" style="background:var(--primary-color); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">로그인</button>
+        `;
     }
+}
+
+window.logout = async function() {
+    await window.sbClient.auth.signOut();
+    location.reload(); // 로그아웃 후 새로고침
 };

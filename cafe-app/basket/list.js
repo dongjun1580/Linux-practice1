@@ -26,7 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCheckout.style.display = 'block';
 
         basket.forEach((item, index) => {
-            // getPrice(item.id) 대신 커스텀 옵션이 모두 계산된 item.price를 사용 (0원 쿠폰도 정상 처리)
+            // 과거에 수량 없이 담긴 아이템 호환 처리
+            if (item.quantity === undefined || isNaN(item.quantity)) {
+                item.quantity = 1;
+            }
+
+            // getPrice(item.id) 대신 커스텀 옵션이 모두 계산된 item.price를 사용
             const price = item.price !== undefined ? item.price : getPrice(item.id); 
             const itemTotal = price * item.quantity;
             total += itemTotal;
@@ -86,25 +91,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 주문하기 기능
-    btnCheckout.addEventListener('click', () => {
+    btnCheckout.addEventListener('click', async () => {
         if(basket.length === 0) return;
         
-        let orders = JSON.parse(localStorage.getItem('cafe_orders')) || [];
-        const newOrder = {
-            id: 'ord_' + new Date().getTime(),
-            date: new Date().toISOString(),
-            items: [...basket],
-            totalPrice: parseInt(totalPriceEl.textContent.replace(/[^0-9]/g, ''))
-        };
-        orders.push(newOrder);
-        localStorage.setItem('cafe_orders', JSON.stringify(orders));
-        
-        // 장바구니 비우기
-        localStorage.removeItem('cafe_basket');
-        basket = [];
-        
-        alert('주문이 성공적으로 접수되었습니다! ☕');
-        location.href = '../orders/list.html'; // 고객 주문 내역 페이지로 이동
+        let userName = '비회원';
+        let userId = null;
+        if (window.sbClient) {
+            const { data: { session } } = await window.sbClient.auth.getSession();
+            if (session?.user) {
+                userName = session.user.email.split('@')[0]; // 이메일 앞부분을 이름으로 사용
+                userId = session.user.id;
+            }
+        }
+
+        const totalPrice = parseInt(totalPriceEl.textContent.replace(/[^0-9]/g, ''));
+
+        try {
+            // 1. orders 테이블에 주문서 저장
+            const { data: orderData, error: orderError } = await window.sbClient
+                .from('orders')
+                .insert([{
+                    user_id: userId,
+                    user_name: userName,
+                    total_price: totalPrice,
+                    status: '준비 중'
+                }])
+                .select('id')
+                .single();
+
+            if (orderError) throw orderError;
+            const orderId = orderData.id;
+
+            // 2. order_items 테이블에 장바구니 상세 메뉴들 저장
+            const orderItems = basket.map(item => ({
+                order_id: orderId,
+                menu_id: item.id,
+                quantity: item.quantity,
+                options: item.options || {}
+            }));
+
+            const { error: itemsError } = await window.sbClient
+                .from('order_items')
+                .insert(orderItems);
+
+            if (itemsError) throw itemsError;
+
+            // 내가 주문한 ID를 로컬스토리지에 기록 (비회원 주문 내역 조회용)
+            let myOrderIds = JSON.parse(localStorage.getItem('cafe_my_order_ids')) || [];
+            myOrderIds.push(orderId);
+            localStorage.setItem('cafe_my_order_ids', JSON.stringify(myOrderIds));
+
+            // 성공적으로 저장되었으므로 로컬스토리지 장바구니 비우기
+            localStorage.removeItem('cafe_basket');
+            basket = [];
+            
+            alert('주문이 성공적으로 접수되었습니다! ☕');
+            location.href = '../orders/list.html'; // 고객 주문 내역 페이지로 이동
+            
+        } catch (error) {
+            console.error("주문 처리 중 오류 발생:", error);
+            alert("주문 접수에 실패했습니다. 잠시 후 다시 시도해주세요.");
+        }
     });
 
     renderBasket();

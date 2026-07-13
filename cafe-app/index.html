@@ -10,8 +10,8 @@
 <body>
     <header class="main-header">
         <div class="logo" onclick="location.reload()">☕ Cafe Warmth</div>
-        <nav class="nav-links">
-            <button onclick="promptAdminPassword()" class="btn-nav admin-link">⚙️ 관리자 모드</button>
+        <nav class="nav-links" id="auth-nav">
+            <!-- 자바스크립트에서 로그인 상태에 따라 버튼 동적 렌더링 -->
         </nav>
     </header>
 
@@ -36,7 +36,6 @@
     <section class="hero-section">
         <div class="hero-content">
             <h1>오늘도 따뜻한<br>커피 한 잔 어떠세요?</h1>
-            <p>나만의 커스텀 메뉴로 빠르게 주문해보세요.</p>
         </div>
     </section>
 
@@ -73,6 +72,10 @@
         </a>
     </nav>
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    
     <script src="index.js?v=2"></script>
 </body>
 </html>
