@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let query = window.sbClient
             .from('orders')
-            .select('id, status, total_price, created_at, order_items(quantity, menus(name))')
+            .select('id, status, total_price, created_at, order_items(quantity, menu_id)')
             .order('created_at', { ascending: false });
 
         if (userId) {
@@ -107,13 +107,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 최근 2건만 표시
     const topOrders = ordersData.slice(0, 2);
 
+    // 로컬 스토리지에서 메뉴 이름 찾기용 데이터 가져오기
+    let localMenus = [];
+    try {
+        localMenus = JSON.parse(localStorage.getItem('cafe_menus')) || [];
+    } catch(e) {}
+
     topOrders.forEach(order => {
         const itemDate = order.created_at ? new Date(order.created_at) : new Date();
         const dateString = !isNaN(itemDate) ? `${itemDate.getFullYear()}.${String(itemDate.getMonth()+1).padStart(2,'0')}.${String(itemDate.getDate()).padStart(2,'0')}` : '날짜 모름';
         
         let title = '주문 상품';
         if(order.order_items && order.order_items.length > 0) {
-            title = order.order_items[0].menus?.name || '메뉴';
+            const firstMenuId = order.order_items[0].menu_id;
+            const menuObj = localMenus.find(m => m.id === firstMenuId);
+            title = menuObj ? menuObj.name : '맛있는 메뉴';
+            
             if(order.order_items.length > 1) title += ` 외 ${order.order_items.length - 1}건`;
         }
         const price = order.total_price ? order.total_price.toLocaleString() : '0';
