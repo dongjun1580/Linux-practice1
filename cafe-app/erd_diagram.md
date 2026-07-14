@@ -13,6 +13,19 @@ erDiagram
         uuid id PK, FK "유저 고유키 (AUTH_USERS 연결)"
         string email "가입 이메일"
         string role "권한 ('customer' 또는 'admin')"
+        string nickname "닉네임"
+        string grade "멤버십 등급"
+        integer stamps "보유 스탬프 개수"
+    }
+
+    COUPONS {
+        uuid id PK "쿠폰 고유키"
+        uuid user_id FK "소유자 고유키"
+        string name "쿠폰명"
+        boolean is_used "사용 여부"
+        timestamp expires_at "만료 일시"
+        timestamp used_at "사용 일시"
+        timestamp created_at "발급 일시"
     }
 
     MENUS {
@@ -46,6 +59,7 @@ erDiagram
     %% 관계선 정의
     AUTH_USERS ||--|| PROFILES : "회원가입 시 프로필 자동 생성"
     PROFILES ||--o{ ORDERS : "회원이 주문함 (1:N)"
+    PROFILES ||--o{ COUPONS : "회원이 쿠폰을 소유함 (1:N)"
     ORDERS ||--|{ ORDER_ITEMS : "주문서 안에 여러 메뉴 담김 (1:N)"
     MENUS ||--o{ ORDER_ITEMS : "어떤 메뉴가 주문되었는지 연결 (1:N)"
 ```
@@ -54,3 +68,4 @@ erDiagram
 1. **`AUTH_USERS` 및 `PROFILES` 추가**: 오늘 추가한 회원가입 시스템과 권한(role) 관리 구조를 정확히 반영했습니다.
 2. **주문자 정보(`userName`, `user_id`) 추가**: 주문(ORDERS) 테이블에 누가 주문했는지 알 수 있도록 주문자 컬럼을 넣었습니다.
 3. **옵션(options) 추가**: 장바구니에서 사용하는 샷 추가, 얼음 양 등의 커스텀 옵션 데이터를 `ORDER_ITEMS`에 JSON 형태로 저장할 수 있게 반영했습니다.
+4. **스탬프 및 쿠폰 시스템 추가 (Supabase)**: `PROFILES` 테이블에 `stamps`, `grade`, `nickname` 컬럼을 추가하고, 발급된 무료 쿠폰을 관리하기 위한 `COUPONS` 테이블을 새롭게 연결했습니다.

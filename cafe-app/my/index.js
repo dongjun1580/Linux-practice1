@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const recentSection = document.querySelector('.recent-orders');
     
     let ordersData = [];
+    let userId = null;
     
     try {
-        let userId = null;
         let myOrderIds = JSON.parse(localStorage.getItem('cafe_my_order_ids')) || [];
         // 예전 버전의 'order-123' 같은 잘못된 형식을 걸러내고 순수 UUID만 남깁니다 (Supabase 에러 방지)
         myOrderIds = myOrderIds.filter(id => typeof id === 'string' && id.length === 36 && id.includes('-'));
@@ -44,20 +44,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.recent-orders').insertAdjacentHTML('beforebegin', `<div style="color:red; background:#ffebee; padding:10px; border-radius:5px; margin-bottom:15px;">스탬프 로드 실패: ${e.message}</div>`);
     }
     
-    // 스탬프 계산 로직
-    let totalItems = 0;
-    ordersData.forEach(order => {
-        if(order.order_items) {
-            order.order_items.forEach(i => totalItems += i.quantity);
+    // 스탬프 및 쿠폰 계산 로직 (Supabase DB 연동)
+    let stamps = 0;
+    let availableCoupons = [];
+
+    if (userId) {
+        // 1. 프로필에서 스탬프 가져오기
+        const { data: profile } = await window.sbClient
+            .from('profiles')
+            .select('stamps')
+            .eq('id', userId)
+            .single();
+        if (profile) {
+            stamps = profile.stamps;
         }
-    });
-    
-    const usedCoupons = parseInt(localStorage.getItem('cafe_used_coupons') || '0');
-    const totalCoupons = Math.floor(totalItems / 10);
-    const availableCoupons = totalCoupons - usedCoupons;
-    
-    // 남은 스탬프는 총 아이템 수에서 (총 쿠폰 수 * 10)을 뺀 나머지
-    const stamps = totalItems % 10;
+
+        // 2. 사용 가능한 쿠폰 가져오기
+        const { data: coupons } = await window.sbClient
+            .from('coupons')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('is_used', false);
+        if (coupons) {
+            availableCoupons = coupons;
+        }
+    } else {
+        // 비회원(로컬 스토리지 사용자) 호환성 유지
+        let totalItems = 0;
+        ordersData.forEach(order => {
+            if(order.order_items) {
+                order.order_items.forEach(i => totalItems += i.quantity);
+            }
+        });
+        const usedCouponsLocal = parseInt(localStorage.getItem('cafe_used_coupons') || '0');
+        const totalCouponsLocal = Math.floor(totalItems / 10);
+        const availableCount = totalCouponsLocal - usedCouponsLocal;
+        stamps = totalItems % 10;
+        if (availableCount > 0) {
+            availableCoupons = Array(availableCount).fill({ id: 'local', name: '아메리카노 1잔 무료 쿠폰' });
+        }
+    }
     
     document.getElementById('current-stamps').textContent = stamps;
     const stampGrid = document.getElementById('stamp-grid');
@@ -70,23 +96,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     
-    if (availableCoupons > 0) {
+    if (availableCoupons.length > 0) {
         document.querySelector('.stamp-notice').innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="color:var(--primary-color); font-weight:bold;">🎉 사용 가능한 무료 쿠폰이 ${availableCoupons}장 있습니다!</span>
+                <span style="color:var(--primary-color); font-weight:bold;">🎉 사용 가능한 쿠폰이 ${availableCoupons.length}장 있습니다!</span>
                 <button id="btn-use-coupon" style="background:var(--primary-color); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">쿠폰 사용</button>
             </div>
         `;
 
         document.getElementById('btn-use-coupon').addEventListener('click', async () => {
-            if (confirm('무료 아메리카노 쿠폰을 사용하시겠습니까? (장바구니에 담깁니다)')) {
-                // 사용한 쿠폰 수 증가
-                localStorage.setItem('cafe_used_coupons', usedCoupons + 1);
+            if (confirm('무료 쿠폰 1장을 사용하시겠습니까? (장바구니에 담깁니다)')) {
+                
+                // 로그인된 유저면 실제 DB 쿠폰 사용 처리
+                if (userId && availableCoupons[0].id !== 'local') {
+                    const targetCouponId = availableCoupons[0].id;
+                    const { error } = await window.sbClient
+                        .from('coupons')
+                        .update({ is_used: true, used_at: new Date().toISOString() })
+                        .eq('id', targetCouponId);
+                    
+                    if (error) {
+                        alert('쿠폰 사용 처리 중 오류가 발생했습니다: ' + error.message);
+                        return;
+                    }
+                } else {
+                    // 비회원 로컬 처리
+                    const used = parseInt(localStorage.getItem('cafe_used_coupons') || '0');
+                    localStorage.setItem('cafe_used_coupons', used + 1);
+                }
                 
                 let menuId = '1';
                 let menuName = '아메리카노 (쿠폰)';
                 
-                // 실제 DB에서 아메리카노 메뉴 ID 가져오기 (외래키 제약조건 방지)
+                // 실제 DB에서 아메리카노 메뉴 가져오기
                 if (window.sbClient) {
                     const { data: americano } = await window.sbClient
                         .from('menus')
@@ -98,7 +140,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         menuId = americano[0].id;
                         menuName = americano[0].name + ' (쿠폰)';
                     } else {
-                        // 아메리카노가 없으면 아무 메뉴나 하나 가져오기
                         const { data: anyMenu } = await window.sbClient
                             .from('menus')
                             .select('id, name')

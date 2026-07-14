@@ -151,6 +151,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (itemsError) throw itemsError;
 
+            // 3. 로그인한 회원이면 스탬프 적립 및 쿠폰 발급 처리
+            if (userId) {
+                const newItemsCount = basket.reduce((sum, item) => sum + item.quantity, 0);
+                
+                // 기존 프로필 스탬프 개수 조회
+                const { data: profile } = await window.sbClient
+                    .from('profiles')
+                    .select('stamps')
+                    .eq('id', userId)
+                    .single();
+                    
+                if (profile) {
+                    const currentStamps = profile.stamps || 0;
+                    const totalStamps = currentStamps + newItemsCount;
+                    
+                    const newCouponsCount = Math.floor(totalStamps / 10);
+                    const remainingStamps = totalStamps % 10;
+                    
+                    // 쿠폰 생성 로직 (10개 달성마다 1장)
+                    if (newCouponsCount > 0) {
+                        const couponsToInsert = [];
+                        for (let i = 0; i < newCouponsCount; i++) {
+                            const expireDate = new Date();
+                            expireDate.setDate(expireDate.getDate() + 30);
+                            
+                            couponsToInsert.push({
+                                user_id: userId,
+                                name: '아메리카노 1잔 무료 쿠폰',
+                                expires_at: expireDate.toISOString()
+                            });
+                        }
+                        const { error: cpError } = await window.sbClient.from('coupons').insert(couponsToInsert);
+                        if (cpError) {
+                            console.error("쿠폰 발급 에러:", cpError);
+                            alert("쿠폰 발급 중 권한 오류가 발생했습니다. (RLS 정책을 확인해주세요)");
+                        } else {
+                            alert(`🎉 축하합니다! 스탬프 10개를 달성하여 무료 쿠폰 ${newCouponsCount}장이 발급되었습니다! 마이페이지에서 확인하세요.`);
+                        }
+                    }
+                    
+                    // 프로필의 남은 스탬프 업데이트
+                    const { error: pfError } = await window.sbClient.from('profiles').update({ stamps: remainingStamps }).eq('id', userId);
+                    if (pfError) {
+                        console.error("스탬프 갱신 에러:", pfError);
+                    }
+                }
+            }
+
             // 내가 주문한 ID를 로컬스토리지에 기록 (비회원 주문 내역 조회용)
             let myOrderIds = JSON.parse(localStorage.getItem('cafe_my_order_ids')) || [];
             myOrderIds.push(orderId);
