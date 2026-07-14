@@ -24,14 +24,14 @@ async function renderOrders() {
             return;
         }
 
-        // DB의 profiles 테이블에서 is_admin 여부 확인
+        // DB의 profiles 테이블에서 role 권한 확인
         const { data: profile } = await window.sbClient
             .from('profiles')
-            .select('is_admin')
+            .select('role')
             .eq('id', session.user.id)
             .single();
-        
-        if (!profile || profile.is_admin !== true) {
+            
+        if (!profile || profile.role !== 'admin') {
             alert(`접근 권한 거부: 현재 계정(${session.user.email})은 사장님(관리자) 권한이 없습니다.`);
             location.href = '../../index.html';
             return;
